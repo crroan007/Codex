@@ -15,12 +15,16 @@ if not GOOGLE_CREDENTIALS:
     raise ValueError("GOOGLE_CREDENTIALS environment variable not set")
 credentials_info = json.loads(GOOGLE_CREDENTIALS)
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
-SPREADSHEET_ID = '1eM2HCV5xFvaAu-o5BGHsXw9NC64N7BjIhe0ZrNP-sXk'  # Replace with your Google Sheet ID
+SPREADSHEET_ID = '1eM2HCV5xFvaAu-o5BGHsXw9NC64N7BjIhe0ZrNP-sXk'  # Your Google Sheet ID
 
 # Authenticate with Google Sheets API using the service account
 credentials = service_account.Credentials.from_service_account_info(
     credentials_info, scopes=SCOPES)
 service = build('sheets', 'v4', credentials=credentials)
+
+@app.route('/health', methods=['GET'])
+def health_check():
+    return jsonify({'status': 'success', 'message': 'Backend is running'})
 
 @app.route('/submit', methods=['POST'])
 def submit():
@@ -280,4 +284,5 @@ def reset_leaderboard():
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    port = int(os.getenv('PORT', 5000))
+    app.run(debug=True, host='0.0.0.0', port=port)
