@@ -11,8 +11,8 @@ const config = {
   // Google Sheets Configuration (API key removed, handled by backend)
   GOOGLE_SHEET_ID: '1eM2HCV5xFvaAu-o5BG1eM2HCV5xFvaAu-o5BGHsXw9NC64N7BjIhe0ZrNP-sXk', // Replace with your full Google Sheet ID
   // Imgur Icon Links
-  icon192: 'https://i.imgur.com/your-icon-192.png', // Replace with your Imgur link
-  icon512: 'https://i.imgur.com/your-icon-512.png', // Replace with your Imgur link
+  icon192: 'https://imgur.com/zhttps://i.imgur.com/zfYXpTo.pngfYXpTo', // Replace with your Imgur link
+  icon512: 'https://imgur.com/a/codex-icon-512-png-TxThttps://i.imgur.com/6P25D41.pngK4Qc', // Replace with your Imgur link
   // Monthly Titles for Leaderboard
   monthlyTitles: [
     "Maverick", "Titan", "Ranger", "Sentinel", "Paladin", "Crusader",
