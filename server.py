@@ -6,7 +6,8 @@ import os
 import json
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS to allow requests from the PWA
+# Allow CORS for your GitHub Pages origin
+CORS(app, resources={r"/*": {"origins": "https://crroan007.github.io"}})
 
 # Load service account credentials from environment variable
 GOOGLE_CREDENTIALS = os.getenv('GOOGLE_CREDENTIALS')
@@ -14,7 +15,7 @@ if not GOOGLE_CREDENTIALS:
     raise ValueError("GOOGLE_CREDENTIALS environment variable not set")
 credentials_info = json.loads(GOOGLE_CREDENTIALS)
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
-SPREADSHEET_ID = 'YOUR1eM2HCV5xFvaAu-o5BGHsXw9NC64N7BjIhe0ZrNP-sXk'  # Replace with your Google Sheet ID
+SPREADSHEET_ID = '1eM2HCV5xFvaAu-o5BGHsXw9NC64N7BjIhe0ZrNP-sXk'  # Replace with your Google Sheet ID
 
 # Authenticate with Google Sheets API using the service account
 credentials = service_account.Credentials.from_service_account_info(
@@ -243,6 +244,36 @@ def update_leaderboard_entry():
                 range=f'Leaderboard!D{row_index}',
                 valueInputOption='RAW',
                 body={'values': [[title]]}
+            ).execute()
+        return jsonify({'status': 'success'})
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+@app.route('/reset_leaderboard', methods=['POST'])
+def reset_leaderboard():
+    try:
+        # Get current month
+        from datetime import datetime
+        current_month = datetime.utcnow().strftime('%Y-%m')
+        # Get all leaderboard entries
+        result = service.spreadsheets().values().get(
+            spreadsheetId=SPREADSHEET_ID,
+            range='Leaderboard!A2:D'
+        ).execute()
+        values = result.get('values', [])
+        # Filter out entries for the current month
+        new_values = [row for row in values if row[1] != current_month]
+        # Clear the Leaderboard tab and rewrite entries (excluding current month)
+        service.spreadsheets().values().clear(
+            spreadsheetId=SPREADSHEET_ID,
+            range='Leaderboard!A2:D'
+        ).execute()
+        if new_values:
+            service.spreadsheets().values().update(
+                spreadsheetId=SPREADSHEET_ID,
+                range='Leaderboard!A2:D',
+                valueInputOption='RAW',
+                body={'values': new_values}
             ).execute()
         return jsonify({'status': 'success'})
     except Exception as e:
