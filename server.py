@@ -3,18 +3,22 @@ from flask_cors import CORS
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 import os
+import json
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS to allow requests from the PWA
 
-# Path to your service account JSON key file
-SERVICE_ACCOUNT_FILE = 'C:\\Homebrew Apps\\Codex\\codex-457513-c5b42d631593.json'
+# Load service account credentials from environment variable
+GOOGLE_CREDENTIALS = os.getenv('GOOGLE_CREDENTIALS')
+if not GOOGLE_CREDENTIALS:
+    raise ValueError("GOOGLE_CREDENTIALS environment variable not set")
+credentials_info = json.loads(GOOGLE_CREDENTIALS)
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
-SPREADSHEET_ID = '1eM2HCV5xFvaAu-o5BGHsXw9NC64N7BjIhe0ZrNP-sXk'  # Replace with your Google Sheet ID
+SPREADSHEET_ID = 'YOUR1eM2HCV5xFvaAu-o5BGHsXw9NC64N7BjIhe0ZrNP-sXk'  # Replace with your Google Sheet ID
 
 # Authenticate with Google Sheets API using the service account
-credentials = service_account.Credentials.from_service_account_file(
-    SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+credentials = service_account.Credentials.from_service_account_info(
+    credentials_info, scopes=SCOPES)
 service = build('sheets', 'v4', credentials=credentials)
 
 @app.route('/submit', methods=['POST'])
@@ -245,4 +249,4 @@ def update_leaderboard_entry():
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5000)
