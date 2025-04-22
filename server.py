@@ -3,6 +3,7 @@ from flask import Flask, request, jsonify
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
 from flask_cors import CORS
+from dotenv import load_dotenv
 
 app = Flask(__name__)
 
