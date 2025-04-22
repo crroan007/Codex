@@ -9,8 +9,12 @@ load_dotenv()  # Load environment variables from .env file
 
 app = Flask(__name__)
 
-# Enable CORS for your frontend
-CORS(app, resources={r"/*": {"origins": "https://codex.college"}})
+# Enable CORS for your frontend with explicit configuration
+CORS(app, resources={r"/*": {
+    "origins": ["https://codex.college"],
+    "methods": ["GET", "POST"],
+    "allow_headers": ["Content-Type"]
+}})
 
 # Google Sheets Configuration
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
