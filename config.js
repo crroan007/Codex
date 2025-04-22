@@ -9,10 +9,7 @@ const config = {
     appId: "1:507460755471:web:04eb5226e42582c8ee037a"
   },
   // Google Sheets Configuration (API key removed, handled by backend)
-  GOOGLE_SHEET_ID: '1eM2HCV5xFvaAu-o5BG1eM2HCV5xFvaAu-o5BGHsXw9NC64N7BjIhe0ZrNP-sXk', // Replace with your full Google Sheet ID
-  // Imgur Icon Links
-  icon192: 'https://cdn.imgpile.com/f/jlxDu5X.png', // Replace with your Imgur link
-  icon512: 'https://cdn.imgpile.com/f/jRYwPWu.png', // Replace with your Imgur link
+  GOOGLE_SHEET_ID: '1eM2HCV5xFvaAu-o5BGHsXw9NC64N7BjIhe0ZrNP-sXk',
   // Monthly Titles for Leaderboard
   monthlyTitles: [
     "Maverick", "Titan", "Ranger", "Sentinel", "Paladin", "Crusader",
