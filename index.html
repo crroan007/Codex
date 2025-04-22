@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Codex</title>
+  <!-- PWA Meta Tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="manifest.json">
+  <!-- Google Fonts for Calligraphy (Cinzel for site name, Lora for body) -->
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lora:wght@400;700&display=swap" rel="stylesheet">
+  <!-- CSS for Styling -->
+  <style>
+    body { 
+      font-family: 'Lora', serif; 
+      background-color: #E8D5B9; /* Aged parchment beige */
+      color: #2A1B13; /* Deep brown text */
+      margin: 0; 
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    #app {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      position: relative;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    /* Login Page with Banner Background */
+    .login-container {
+      background-image: url('https://iili.io/3GhEBFj.png');
+      background-size: cover; /* Ensures the image covers the entire area */
+      background-position: calc(50% + 50px) center; /* Shift 50px to the right */
+      background-repeat: no-repeat;
+      width: 100%;
+      height: 100vh; /* Full viewport height */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end; /* Align content to the lower third */
+      padding-bottom: 5%; /* Adjust to position in lower third */
+      box-sizing: border-box;
+    }
+    .signup-container {
+      background-image: url('https://iili.io/3GhEBFj.png');
+      background-size: cover; /* Ensures the image covers the entire area */
+      background-position: calc(50% + 50px) center; /* Shift 50px to the right */
+      background-repeat: no-repeat;
+      width: 100%;
+      height: 100vh; /* Full viewport height */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end; /* Align content to the lower third */
+      padding-bottom: 5%; /* Adjust to position in lower third */
+      box-sizing: border-box;
+    }
+    h1 { 
+      font-family: 'Cinzel', serif; /* Calligraphy font for site name */
+      color: #D4A017; /* Glowing gold */
+      font-size: 2.5rem; /* Responsive font size */
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+    .login-container h2, .signup-container h2 { 
+      font-family: 'Lora', serif; 
+      color: #d69f20; /* Warm gold for "Login" and "Sign Up" text */
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    h2 { 
+      font-family: 'Lora', serif; 
+      color: #8B1E3F; /* Burgundy for other pages */
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .card { 
+      background-color: #5C4B3F; /* Muted gray-brown */
+      border: 2px solid #d69f20; /* Warm gold border */
+      border-radius: 8px; 
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Shadow for depth */
+      padding: 1.5rem;
+      width: 100%;
+      max-width: 90%; /* Previous size */
+      box-sizing: border-box;
+      opacity: 0.95; /* Slight transparency for banner visibility */
+    }
+    .nav-bar { 
+      background-color: #2A1B13; /* Deep brown */
+      position: fixed; 
+      bottom: 0; 
+      width: 100%; 
+      display: flex; 
+      justify-content: space-around; 
+      padding: 0.5rem 0;
+      border-top: 2px solid #D4A017; /* Gold accent border */
+    }
+    button { 
+      cursor: pointer; 
+      background-color: #8B1E3F; /* Burgundy buttons */
+      color: #E8D5B9; /* Parchment text */
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      font-family: 'Lora', serif;
+      font-size: 1rem;
+      transition: background-color 0.3s;
+    }
+    .login-container button:first-child, .signup-container button:first-child {
+      background-color: #d69f20; /* Warm gold for Login and Sign Up buttons */
+    }
+    button:hover {
+      background-color: #A6274C; /* Lighter burgundy on hover */
+    }
+    .login-container button:first-child:hover, .signup-container button:first-child:hover {
+      background-color: #e6b332; /* Slightly lighter gold on hover */
+    }
+    button:disabled { 
+      opacity: 0.5; 
+      cursor: not-allowed; 
+    }
+    a { 
+      color: #D4A017; /* Gold links */
+      text-decoration: underline; 
+    }
+    p { 
+      margin: 0 0 0.5rem 0; 
+    }
+    input, select {
+      width: 100%;
+      padding: 0.5rem;
+      margin-bottom: 0.5rem;
+      border: 1px solid #2A1B13; /* Deep brown border */
+      border-radius: 4px;
+      font-family: 'Lora', serif;
+      font-size: 1rem;
+      box-sizing: border-box;
+    }
+    /* Header with Logo */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      width: 100%;
+    }
+    .header img {
+      width: 3rem; /* Responsive logo size */
+      height: 3rem;
+      margin-right: 0.5rem;
+    }
+    /* Responsive Adjustments for iPhones */
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 2rem;
+      }
+      h2 {
+        font-size: 1.25rem;
+      }
+      .card {
+        max-width: 100%;
+        padding: 1rem;
+      }
+      button {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+      }
+      .header img {
+        width: 2.5rem;
+        height: 2.5rem;
+      }
+      .login-container, .signup-container {
+        padding-bottom: 10%; /* Adjust for smaller screens */
+      }
+    }
+  </style>
+  <!-- Firebase SDK (Compat Version) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <!-- Config Variables -->
+  <script src="config.js"></script>
+</head>
+<body>
+  <div id="app">
+    <!-- Pages will be rendered here -->
+  </div>
+  <script>
+    // Initialize Firebase
+    firebase.initializeApp(config.firebaseConfig);
+    const auth = firebase.auth();
+
+    // App State
+    let currentUser = null;
+    let currentPage = 'login';
+    let submissions = [];
+    let activity = [];
+    let leaderboard = [];
+    let users = [];
+
+    // Backend Server URL
+    const BACKEND_URL = 'https://codex-backend.onrender.com';
+
+    // Pages
+    const pages = {
+      login: `
+        <div class="login-container">
+          <div class="card">
+            <h2>Login</h2>
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+              <input id="login-email" type="email" placeholder="Email">
+              <input id="login-password" type="password" placeholder="Password">
+              <button onclick="handleLogin()">Log In</button>
+              <p style="text-align: center; color: #D4A017; cursor: pointer;" onclick="navigate('sign-up')">Need an account? Sign Up</p>
+            </div>
+          </div>
+        </div>
+      `,
+      'sign-up': `
+        <div class="signup-container">
+          <div class="card">
+            <h2>Sign Up</h2>
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+              <input id="signup-email" type="email" placeholder="Email">
+              <input id="signup-password" type="password" placeholder="Password">
+              <button onclick="handleSignUp()">Sign Up</button>
+              <p style="text-align: center; color: #D4A017; cursor: pointer;" onclick="navigate('login')">Already have an account? Log In</p>
+            </div>
+          </div>
+        </div>
+      `,
+      home: `
+        <div style="width: 100%; max-width: 90%;">
+          <div class="header">
+            <img src="${config.icon192}" alt="Codex Logo">
+            <h1>Codex</h1>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <h2>Media</h2>
+            <button onclick="navigate('profile')">Profile</button>
+          </div>
+          <div id="submissions" style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 4rem;">
+            <!-- Submissions will be loaded here -->
+          </div>
+          <div class="nav-bar">
+            <button onclick="navigate('home')">Home</button>
+            <button onclick="navigate('submit')">Submit</button>
+            <button onclick="navigate('leaderboard')">Leaderboard</button>
+          </div>
+        </div>
+      `,
+      submit: `
+        <div class="header">
+          <img src="${config.icon192}" alt="Codex Logo">
+          <h1>Codex</h1>
+        </div>
+        <div class="card">
+          <h2>Submit Media</h2>
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <input id="submit-url" type="text" placeholder="URL">
+            <select id="submit-priority">
+              <option value="1">1 (Most Important)</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5 (Least Important)</option>
+            </select>
+            <button onclick="handleSubmit()">Submit</button>
+            <button onclick="navigate('home')" style="background-color: #2A1B13;">Back to Home</button>
+          </div>
+        </div>
+      `,
+      profile: `
+        <div class="header">
+          <img src="${config.icon192}" alt="Codex Logo">
+          <h1>Codex</h1>
+        </div>
+        <div class="card">
+          <h2>Profile</h2>
+          <p id="profile-email">Email: </p>
+          <p id="profile-points">Points: </p>
+          <p id="profile-title" style="margin-bottom: 1rem;">Title: </p>
+          <button onclick="handleLogout()" style="background-color: #A6274C; margin-bottom: 0.5rem;">Logout</button>
+          <button onclick="navigate('home')" style="background-color: #2A1B13;">Back to Home</button>
+        </div>
+      `,
+      leaderboard: `
+        <div class="header">
+          <img src="${config.icon192}" alt="Codex Logo">
+          <h1>Codex</h1>
+        </div>
+        <div class="card">
+          <h2>Leaderboard</h2>
+          <div id="leaderboard-list" style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <!-- Leaderboard will be loaded here -->
+          </div>
+          <button onclick="navigate('home')" style="background-color: #2A1B13; margin-top: 1rem;">Back to Home</button>
+        </div>
+      `
+    };
+
+    // Navigation Function
+    function navigate(page) {
+      currentPage = page;
+      renderPage();
+    }
+
+    // Render Page
+    function renderPage() {
+      const app = document.getElementById('app');
+      app.innerHTML = pages[currentPage];
+      if (currentPage === 'profile' && currentUser) {
+        document.getElementById('profile-email').textContent = `Email: ${currentUser.email}`;
+        loadUserProfile();
+      }
+      if (currentPage === 'home') {
+        loadSubmissions();
+      }
+      if (currentPage === 'leaderboard') {
+        loadLeaderboard();
+      }
+    }
+
+    // Authentication Handlers
+    function handleLogin() {
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+      auth.signInWithEmailAndPassword(email, password)
+        .then(userCredential => {
+          currentUser = userCredential.user;
+          navigate('home');
+        })
+        .catch(error => alert(error.message));
+    }
+
+    function handleSignUp() {
+      const email = document.getElementById('signup-email').value;
+      const password = document.getElementById('signup-password').value;
+      auth.createUserWithEmailAndPassword(email, password)
+        .then(userCredential => {
+          currentUser = userCredential.user;
+          addUserToSheet(email);
+          navigate('home');
+        })
+        .catch(error => alert(error.message));
+    }
+
+    function handleLogout() {
+      auth.signOut().then(() => {
+        currentUser = null;
+        navigate('login');
+      });
+    }
+
+    // Backend API Functions
+    async function addUserToSheet(email) {
+      try {
+        const response = await fetch(`${BACKEND_URL}/users`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: email,
+            points: 0,
+            title: ''
+          })
+        });
+        const result = await response.json();
+        if (result.status !== 'success') throw new Error('Failed to add user to sheet');
+      } catch (error) {
+        console.error('Error adding user:', error);
+      }
+    }
+
+    async function handleSubmit() {
+      if (!currentUser) return;
+      const url = document.getElementById('submit-url').value;
+      const priority = parseInt(document.getElementById('submit-priority').value);
+      const timestamp = new Date().toISOString();
+      try {
+        const response = await fetch(`${BACKEND_URL}/submissions`);
+        const data = await response.json();
+        console.log('Fetched Submissions Data:', data);
+        const nextId = data.submissions ? data.submissions.length + 1 : 1;
+        const appendResponse = await fetch(`${BACKEND_URL}/submit`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: nextId,
+            url: url,
+            priority: priority,
+            submitterEmail: currentUser.email,
+            timestamp: timestamp
+          })
+        });
+        const appendResult = await appendResponse.json();
+        console.log('Append Response:', appendResult);
+        if (appendResult.status !== 'success') {
+          throw new Error(`Failed to submit media: ${appendResult.message}`);
+        }
+        loadSubmissions();
+        navigate('home');
+      } catch (error) {
+        console.error('Error submitting media:', error);
+        alert('Failed to submit media: ' + error.message);
+      }
+    }
+
+    async function loadSubmissions() {
+      try {
+        const response = await fetch(`${BACKEND_URL}/submissions`);
+        const data = await response.json();
+        submissions = data.submissions || [];
+        submissions.sort((a, b) => a.priority - b.priority);
+        const submissionsDiv = document.getElementById('submissions');
+        submissionsDiv.innerHTML = submissions.map(submission => `
+          <div class="card">
+            <a href="${submission.url}" target="_blank" onclick="handleClick(${submission.id}); return false;">${submission.url}</a>
+            <p>Priority: ${submission.priority}</p>
+            <p>Submitted by: ${submission.submitterEmail}</p>
+            <p>Status: ${getStatus(submission.id)}</p>
+            <button onclick="markCompleted(${submission.id})" ${getStatus(submission.id) === 'completed' ? 'disabled' : ''}>Mark Completed</button>
+          </div>
+        `).join('');
+      } catch (error) {
+        console.error('Error loading submissions:', error);
+      }
+    }
+
+    function getStatus(submissionId) {
+      const userActivity = activity.find(a => a.userEmail === currentUser.email && a.submissionId === submissionId);
+      return userActivity ? userActivity.status : 'unclicked';
+    }
+
+    async function handleClick(submissionId) {
+      if (!currentUser) return;
+      const userActivity = activity.find(a => a.userEmail === currentUser.email && a.submissionId === submissionId);
+      if (userActivity && userActivity.status === 'completed') return;
+      const newStatus = userActivity && userActivity.status === 'clicked' ? 'unclicked' : 'clicked';
+      try {
+        const response = await fetch(`${BACKEND_URL}/activity`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userEmail: currentUser.email,
+            submissionId: submissionId,
+            status: newStatus,
+            timestamp: new Date().toISOString(),
+            month: new Date().toISOString().slice(0, 7)
+          })
+        });
+        const result = await response.json();
+        if (result.status !== 'success') throw new Error('Failed to update activity');
+        await loadActivity();
+        loadSubmissions();
+      } catch (error) {
+        console.error('Error updating activity:', error);
+      }
+    }
+
+    async function markCompleted(submissionId) {
+      if (!currentUser) return;
+      const userActivity = activity.find(a => a.userEmail === currentUser.email && a.submissionId === submissionId);
+      if (userActivity && userActivity.status === 'completed') return;
+      const submission = submissions.find(s => s.id === submissionId);
+      const points = 6 - submission.priority;
+      const currentMonth = new Date().toISOString().slice(0, 7);
+      try {
+        // Update Activity
+        await fetch(`${BACKEND_URL}/activity`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userEmail: currentUser.email,
+            submissionId: submissionId,
+            status: 'completed',
+            timestamp: new Date().toISOString(),
+            month: currentMonth
+          })
+        });
+        // Update User Points
+        const userResponse = await fetch(`${BACKEND_URL}/users`);
+        const userData = await userResponse.json();
+        let userPoints = 0;
+        let user = userData.users.find(u => u.email === currentUser.email);
+        if (user) {
+          userPoints = user.points + points;
+        } else {
+          userPoints = points;
+        }
+        await fetch(`${BACKEND_URL}/users/update`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: currentUser.email,
+            points: userPoints
+          })
+        });
+        // Update Leaderboard
+        const leaderboardResponse = await fetch(`${BACKEND_URL}/leaderboard`);
+        const leaderboardData = await leaderboardResponse.json();
+        let currentLeaderboardPoints = 0;
+        let leaderboardEntry = leaderboardData.leaderboard.find(entry => entry.userEmail === currentUser.email && entry.month === currentMonth);
+        if (leaderboardEntry) {
+          currentLeaderboardPoints = leaderboardEntry.points + points;
+        } else {
+          currentLeaderboardPoints = points;
+        }
+        if (!leaderboardEntry) {
+          await fetch(`${BACKEND_URL}/leaderboard`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              userEmail: currentUser.email,
+              month: currentMonth,
+              points: currentLeaderboardPoints,
+              title: ''
+            })
+          });
+        } else {
+          await fetch(`${BACKEND_URL}/leaderboard/update`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              userEmail: currentUser.email,
+              month: currentMonth,
+              points: currentLeaderboardPoints
+            })
+          });
+        }
+        await updateLeaderboard();
+        await loadActivity();
+        loadSubmissions();
+      } catch (error) {
+        console.error('Error marking completed:', error);
+      }
+    }
+
+    async function loadActivity() {
+      try {
+        const response = await fetch(`${BACKEND_URL}/activity`);
+        const data = await response.json();
+        activity = data.activity || [];
+        if (currentPage === 'home') loadSubmissions();
+      } catch (error) {
+        console.error('Error loading activity:', error);
+      }
+    }
+
+    async function loadUserProfile() {
+      try {
+        const response = await fetch(`${BACKEND_URL}/users`);
+        const data = await response.json();
+        users = data.users || [];
+        const user = users.find(u => u.email === currentUser.email);
+        if (user) {
+          document.getElementById('profile-points').textContent = `Points: ${user.points}`;
+          document.getElementById('profile-title').textContent = `Title: ${user.title || 'None'}`;
+        }
+      } catch (error) {
+        console.error('Error loading user profile:', error);
+      }
+    }
+
+    async function updateLeaderboard() {
+      const currentMonth = new Date().toISOString().slice(0, 7);
+      try {
+        const response = await fetch(`${BACKEND_URL}/leaderboard`);
+        const data = await response.json();
+        leaderboard = data.leaderboard || [];
+        const currentLeaderboard = leaderboard.filter(entry => entry.month === currentMonth);
+        currentLeaderboard.sort((a, b) => b.points - a.points);
+        if (currentLeaderboard.length > 0) {
+          const topUser = currentLeaderboard[0];
+          const title = config.monthlyTitles[new Date().getMonth() % config.monthlyTitles.length];
+          topUser.title = title;
+          await fetch(`${BACKEND_URL}/leaderboard/update`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              userEmail: topUser.userEmail,
+              month: currentMonth,
+              points: topUser.points,
+              title: title
+            })
+          });
+          const userResponse = await fetch(`${BACKEND_URL}/users`);
+          const userData = await userResponse.json();
+          const user = userData.users.find(u => u.email === topUser.userEmail);
+          if (user) {
+            await fetch(`${BACKEND_URL}/users/update`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                email: topUser.userEmail,
+                points: user.points,
+                title: title
+              })
+            });
+          }
+        }
+      } catch (error) {
+        console.error('Error updating leaderboard:', error);
+      }
+    }
+
+    async function loadLeaderboard() {
+      try {
+        const response = await fetch(`${BACKEND_URL}/leaderboard`);
+        const data = await response.json();
+        leaderboard = data.leaderboard || [];
+        const currentMonth = new Date().toISOString().slice(0, 7);
+        const currentLeaderboard = leaderboard.filter(entry => entry.month === currentMonth);
+        currentLeaderboard.sort((a, b) => b.points - a.points);
+        const leaderboardDiv = document.getElementById('leaderboard-list');
+        leaderboardDiv.innerHTML = currentLeaderboard.map(entry => `
+          <div style="padding: 0.5rem; border-bottom: 1px solid #2A1B13;">
+            <p>User: ${entry.userEmail}</p>
+            <p>Points: ${entry.points}</p>
+            ${entry.title ? `<p>Title: ${entry.title}</p>` : ''}
+          </div>
+        `).join('');
+      } catch (error) {
+        console.error('Error loading leaderboard:', error);
+      }
+    }
+
+    // Initial Render
+    auth.onAuthStateChanged(user => {
+      currentUser = user;
+      if (user) {
+        navigate('home');
+      } else {
+        navigate('login');
+      }
+    });
+    renderPage();
+  </script>
+</body>
+</html>
